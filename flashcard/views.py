@@ -106,6 +106,7 @@ def iniciar_desafio(request):
             flashcard_desafio = FlashcardDesafio(
             flashcard=f,
             )
+
             flashcard_desafio.save()
 
             desafio.flashcards.add(flashcard_desafio)
@@ -134,15 +135,28 @@ def listar_desafio(request):
         categoria_filtrar = request.GET.get('categoria_filtrar')
         dificuldade_filtrar = request.GET.get('dificuldade_filtrar')
 
+        
         if categoria_filtrar:
             desafios = desafios.filter(categoria__id__in=categoria_filtrar)
         if dificuldade_filtrar:
             desafios = desafios.filter(dificuldade=dificuldade_filtrar)
 
+        
+        respondidos = 0
+        qtd_perguntas = 0
+        for desafio in desafios:
+            for flashcard in desafio.flashcards.all():     
+                qtd_perguntas += 1
+                if flashcard.respondido:
+                    respondidos += 1
+                  
+
         return render(request, 'listar_desafio.html',
             {'desafios': desafios,
             'categorias': categorias,
             'dificuldades': dificuldades,
+            'respondidos': respondidos,
+            'qtd_perguntas': qtd_perguntas,
             })
     
 @login_required
@@ -163,6 +177,7 @@ def responder_flashcard(request, id):
 
 
     return redirect(reverse('desafio', desafio_id))
+
 @login_required
 def relatorio(request, id):
     desafio = Desafio.objects.get(id=id)
@@ -176,3 +191,12 @@ def relatorio(request, id):
     for categoria in categorias:
         dados2.append(desafio.flashcards.filter(flashcard__categoria=categoria).filter(acertou=True).count())
         return render(request, 'relatorio.html', {'desafio': desafio, 'dados': dados, 'categorias': name_categoria, 'dados2': dados2,},)
+
+@login_required
+def deletar_desafio(request, id):
+    desafio = Desafio.objects.get(id=id)
+    try:
+        desafio.delete()
+    except:
+        messages.add_message(request, constants.ERROR, 'Não foi possível deletar o desafio')
+    return redirect(reverse('listar_desafio'))

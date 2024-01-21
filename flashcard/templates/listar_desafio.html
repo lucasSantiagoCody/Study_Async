@@ -49,6 +49,7 @@
  <th scope="col">Titulo</th>
  <th scope="col">Dificuldade</th>
  <th scope="col">Status</th>
+ <th scope="col">Deletar</th>
  </tr>
  </thead>
  <tbody>
@@ -57,7 +58,11 @@
  <th><a href="{% url 'desafio' desafio.id %}">{{desafio.id}}</a></th>
  <td>{{desafio.titulo}}</td>
  <td>{{desafio.get_dificuldade_display}}</td>
- <td>{{desafio.status}}</td>
+ <td>concluidos {{respondidos}}/{{qtd_perguntas}}</td>
+ <td><a href="{% url 'deletar_desafio' desafio.id %}"><box-icon type='solid' name='trash' class="bg-danger" style="border-radius: 4px; cursor: pointer"></box-icon></a></td>
+ <td>   
+ 
+ </td>
  </tr>
  {% endfor %}
  </tbody>

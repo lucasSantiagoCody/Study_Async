@@ -8,7 +8,8 @@ urlpatterns = [
     path('desafio/<int:id>/', views.desafio, name='desafio'),
     path('listar_desafio/', views.listar_desafio, name='listar_desafio'),
     path('responder_flashcard/<int:id>/', views.responder_flashcard, name='responder_flashcard'),
-    path('relatorio/<int:id>/', views.relatorio, name='relatorio')
+    path('relatorio/<int:id>/', views.relatorio, name='relatorio'),
+    path('deletar_desafio/<int:id>/', views.deletar_desafio, name='deletar_desafio'),
 
 
 ]
